@@ -32,3 +32,6 @@ Or
 
 Made with [Hemorrhoid](https://en.wikipedia.org/wiki/Hemorrhoid) and [CALM](https://github.com/VitoVan/calm)
 
+---
+
+[ATTRIBUTION](assets/ATTRIBUTION.md)
