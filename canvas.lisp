@@ -261,7 +261,7 @@ only when the window is not hidden or minimized."
       (apply #'c:set-source-rgb *fg-color-pause*)
       (apply #'c:set-source-rgb *fg-color*))
 
-  (c:move-to 24 100)
+  (c:move-to 22 100)
   (c:set-font-size 100)
 
   (let* ((time-string
