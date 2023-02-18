@@ -4,7 +4,7 @@
 ;; CALM version check
 ;;
 
-(let ((required-version "0.0.20")
+(let ((required-version "0.0.30")
       (calm-version (slot-value (asdf:find-system 'calm) 'asdf:version)))
   (when (uiop:version< calm-version required-version)
     (format t "Sorry, this is built on CALM ~A, older version (current: ~A) of CALM won't work.~%" required-version calm-version)
@@ -31,7 +31,7 @@
 
 (setf *calm-window-width* 300)
 (setf *calm-window-height* 200)
-(setf *calm-window-icon* "images/icon.png")
+(setf *calm-window-icon* "assets/icon.png")
 
 (setf *calm-window-title*
       (if (string= (uiop:getenv "BUILD_TRIAL") "yah")
@@ -59,6 +59,9 @@
 
 (defparameter *hovering-pause-resume-button* nil)
 (defparameter *hovering-reset-button* nil)
+
+(defparameter *show-help* nil)
+
 
 ;;
 ;; custom logic functions
@@ -166,14 +169,31 @@
   (c:rel-line-to 0 -10)
   (c:stroke))
 
+(defun browse (url)
+  "open `url' in the default browser"
+  #+darwin
+  (uiop:run-program (str:concat "open " url))
+  #+linux
+  (uiop:run-program (str:concat "xdg-open " url))
+  #+win32
+  (uiop:run-program (str:concat "start " url)))
+
 ;;
 ;; events handling
 ;;
 
 (defun on-keyup (key)
-  (when (eq key :SCANCODE-SPACE)
-    (setf *pause* (not *pause*))
-    (when *pause* (stop-timer))))
+  (cond
+    ((eq key :SCANCODE-SPACE)
+     (progn (setf *pause* (not *pause*)) (when *pause* (stop-timer))))
+    ((eq key :SCANCODE-SLASH)
+     (setf *show-help* t))
+    ((eq key :SCANCODE-ESCAPE)
+     (setf *show-help* nil))
+    ((eq key :SCANCODE-B)
+     (browse "https://vitovan.com/focalizzare"))
+    (t (format t "~%KEY PRESSED: ~A~%" key))))
+
 
 (defun is-in-rectangle (x y rx ry rwidth rheight)
   "to test if the mouse is inside an area, for testing CLICK and HOVER event"
@@ -206,6 +226,34 @@
 only when the window is not hidden or minimized."
 
   (c:select-font-face "Arial" :normal :normal)
+
+  (when *show-help*
+    (c:set-font-size 18)
+    (c:move-to 20 30)
+    (apply #'c:set-source-rgb *button-color*)
+    (c:show-text "Press:")
+    (c:move-to 30 60)
+    (c:show-text "<?>")
+    (c:move-to 120 60)
+    (c:show-text "to show this help")
+    (c:move-to 30 90)
+    (c:show-text "<ESC>")
+    (c:move-to 120 90)
+    (c:show-text "to close this help")
+    (c:move-to 30 120)
+    (c:show-text "<SPACE>")
+    (c:move-to 120 120)
+    (c:show-text "to start or pause")
+    (c:move-to 30 150)
+    (c:show-text "<B>")
+    (c:move-to 120 150)
+    (c:show-text "to open the website")
+
+    (c:move-to 50 180)
+    (apply #'c:set-source-rgb *button-color-hover*)
+    (c:show-text "    May you be happy.")
+    (return-from draw 42))
+
 
   (apply #'c:set-source-rgb *bg-color*)
   (c:paint)
