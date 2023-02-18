@@ -81,7 +81,7 @@ jobs:
           chmod +x ./dist/calm
           export APP_ICON=./images/icon.icns
           export DMG_ICON=./images/icon-dmg.icns
-          export APP_VERSION=0.0.4
+          export APP_VERSION=0.0.5
           export APP_ID=com.vitovan.focalizzare
           export APP_NAME=Focalizzare
           export DIST_DIR=./dist
