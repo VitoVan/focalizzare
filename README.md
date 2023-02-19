@@ -1,4 +1,4 @@
-# <img style="vertical-align:middle;margin-right:10px;" width="100" alt="Focalizzare" src="./images/icon-head.png"> Focalizzare
+# <img style="vertical-align:middle;margin-right:10px;width:1.26em;" alt="Focalizzare" src="./images/icon-head.png"> Focalizzare
 
 Focalizzare with Pomodoro Technique.
 
