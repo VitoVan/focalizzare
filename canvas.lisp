@@ -18,7 +18,7 @@
 ;;
 ;; Like this one Focalizzare.
 ;;
-;; All we need is to write a file named `canvas.lisp', and then left the rest to `CALM' - a shit work bearer.
+;; All we need is to write a file named `canvas.lisp', and then leave the rest to `CALM' - a shit work bearer.
 ;;
 ;; For more about `CALM', please check: https://github.com/VitoVan/calm/
 ;; Of course, it lacks documentation by the time of now (Feb 2023),
