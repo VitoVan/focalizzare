@@ -1,3 +1,33 @@
+;;
+;; No, shit! you are looking at the source code!
+;; This is absolutely a piece of shit and might cause physical damage to your eyes.
+;;
+;; I have been programming for many years,
+;; but I have never managed to be professional in any programming language.
+;;
+;; Especially Lisp.
+;;
+;; I like Lisp a lot, but it is such a pain to distribute software written in Lisp,
+;; and so few people are working on this language (compare to JavaScript? Maybe this is a good thing).
+;;
+;; So I tried to do some shit work to make Lisp software (SDL2 alike) distribution easier,
+;; nothing high-tech, they are just a bunch of shitty bash scripts, some kindergarten C and a little messy Lisp.
+;;
+;; After the shit work is done, we could generate a cross-platform (Linux / macOS / Windows) software
+;; with a single Lisp file.
+;;
+;; Like this one Focalizzare.
+;;
+;; All we need is to write a file named `canvas.lisp', and then left the rest to `CALM' - a shit work bearer.
+;;
+;; For more about `CALM', please check: https://github.com/VitoVan/calm/
+;; Of course, it lacks documentation by the time of now (Feb 2023),
+;; and it is just a mix of cl-cairo2, cl-sdl2 and some other things.
+;;
+;; So, that's it. I will leave you to the code, and may you enjoy Lisp.
+;;
+
+
 (in-package #:calm)
 
 ;;
