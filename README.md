@@ -14,5 +14,5 @@ Assets attribution: [ATTRIBUTION.md](assets/ATTRIBUTION.md)
 
 
 
-Made with [Hemorrhoid](https://en.wikipedia.org/wiki/Hemorrhoid) and [CALM](https://github.com/VitoVan/calm)
+Made with [Hemorrhoid](https://vitovan.com/jack.html) and [CALM](https://github.com/VitoVan/calm)
 
