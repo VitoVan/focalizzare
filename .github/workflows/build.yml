@@ -26,7 +26,7 @@ jobs:
           ls -lah calm
           export PATH=$PATH:$(pwd)/calm/
           export APP_NAME=Focalizzare
-          export APP_ICON="assets/icon.png"
+          export APP_ICON="$(pwd)/images/icon.png"
           calm publish
           ls -lah .
       - name: GH Release
@@ -59,8 +59,8 @@ jobs:
           ls -lah calm
           rm calm.dmg
           export PATH=$PATH:$(pwd)/calm/
-          export APP_ICON=./images/icon.icns
-          export DMG_ICON=./images/icon-dmg.icns
+          export APP_ICON="$(pwd)/images/icon.icns"
+          export DMG_ICON="$(pwd)/images/icon-dmg.icns"
           export APP_VERSION=0.0.6
           export APP_ID=com.vitovan.focalizzare
           export APP_NAME=Focalizzare
@@ -91,7 +91,7 @@ jobs:
           unzip calm.zip -d calm
           ls -lah calm
           export PATH=$PATH:$(pwd)/calm/
-          export APP_ICON=./images/icon.ico
+          export APP_ICON="$(pwd)/images/icon.ico"
           export APP_NAME=Focalizzare
           calm publish
           mv ./*-Installer.exe ./Focalizzare.exe
