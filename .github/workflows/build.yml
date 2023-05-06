@@ -1,4 +1,4 @@
-name: Paid
+name: build
 
 permissions:
   contents: write
@@ -6,8 +6,8 @@ permissions:
 on:
   push:
     tags:
-      - "paid-*.*.*"
-      - "test-paid-*"
+      - "*.*.*"
+      - "test-*"
 
 jobs:
 
@@ -20,18 +20,14 @@ jobs:
       - name: Build
         run: |
           set -x
-          curl -L -o calm.tgz https://github.com/VitoVan/calm/releases/download/0.0.32/calm.tgz
+          curl -L -o calm.tgz https://github.com/VitoVan/calm/releases/download/0.1.0/calm.tgz
           mkdir calm
           tar xvf calm.tgz --directory=calm
           ls -lah calm
           export PATH=$PATH:$(pwd)/calm/
-          calm dist
-          cp -r assets ./dist/assets
-          chmod +x ./dist/calm
-          export DIST_DIR=./dist
           export APP_NAME=Focalizzare
           export APP_ICON="assets/icon.png"
-          calm sh fedora appimage
+          calm publish
           ls -lah .
       - name: GH Release
         uses: softprops/action-gh-release@v0.1.14
@@ -45,7 +41,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [macos-11, macos-12, macos-10.15]
+        os: [macos-11, macos-12, macos-13]
 
     env:
       CI_MATRIX_OS: ${{ matrix.os }}
@@ -56,35 +52,21 @@ jobs:
       - name: Build
         run: |
           set -x
-          brew install 7zip
-          if [ "${CI_MATRIX_OS}" = "macos-12" ]; then
-              export OS_SUBFIX=""
-          else
-              export OS_SUBFIX="-${CI_MATRIX_OS}"
-          fi
-          curl -L -o calm.dmg https://github.com/VitoVan/calm/releases/download/0.0.32/calm${OS_SUBFIX}.dmg
-          7z x calm.dmg -ocalm-dmg
-          mv "calm-dmg/Calm - CALM/Calm.app/Contents/MacOS/" calm
-          rm calm.dmg
-          rm calm/lib/libSDL2.dylib
-          cp calm/lib/libSDL2-2.0.0.dylib calm/lib/libSDL2.dylib
+          export OS_SUBFIX=".${CI_MATRIX_OS}"
+          curl -L -o calm.dmg https://github.com/VitoVan/calm/releases/download/0.1.0/calm${OS_SUBFIX}.dmg
+          hdiutil attach calm.dmg
+          cp -R "/Volumes/Calm - CALM/Calm.app/Contents/MacOS/" calm
           ls -lah calm
-          chmod +x calm/calm
-          chmod +x calm/sbcl/bin/sbcl
+          rm calm.dmg
           export PATH=$PATH:$(pwd)/calm/
-          calm dist
-          cp -r assets ./dist/assets
-          chmod +x ./dist/calm
           export APP_ICON=./images/icon.icns
           export DMG_ICON=./images/icon-dmg.icns
-          export APP_VERSION=0.0.5
+          export APP_VERSION=0.0.6
           export APP_ID=com.vitovan.focalizzare
           export APP_NAME=Focalizzare
-          export DIST_DIR=./dist
-          calm sh darwin bundle
-          export DMG_NAME=Focalizzare${OS_SUBFIX}
-          calm sh darwin dmg
+          calm publish
           ls -lah .
+          mv *.dmg Focalizzare${OS_SUBFIX}.dmg
       - name: GH Release
         uses: softprops/action-gh-release@v0.1.14
         with:
@@ -105,18 +87,13 @@ jobs:
         run: |
           set -x
           pacman -S --noconfirm --needed unzip
-          curl -L -o calm.zip https://github.com/VitoVan/calm/releases/download/0.0.32/calm.zip
+          curl -L -o calm.zip https://github.com/VitoVan/calm/releases/download/0.1.0/calm.zip
           unzip calm.zip -d calm
           ls -lah calm
           export PATH=$PATH:$(pwd)/calm/
           export APP_ICON=./images/icon.ico
-          calm sh msys new-app-icon
-          calm dist
-          cp -r assets ./dist/assets
-          export DIST_DIR=./dist
           export APP_NAME=Focalizzare
-          export INSTALLER_ASSETS_DIR=./images/
-          calm sh msys installer
+          calm publish
           mv ./*-Installer.exe ./Focalizzare.exe
           ls -lah .
 

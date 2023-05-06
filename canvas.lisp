@@ -128,7 +128,8 @@
         (setf *last-second* curr-second)
         (if *breaking*
             (progn (incf *breaking-timer* (* -1 duration)) (when (< *breaking-timer* 0) (setf *breaking-timer* 0)))
-            (progn (incf *timer* (* -1 duration)) (when (< *timer* 0) (setf *timer* 0)))))
+            (progn (incf *timer* (* -1 duration)) (when (< *timer* 0) (setf *timer* 0))))
+        (setf *calm-redraw* t))
       ;; when time is up
       (when (<= (if *breaking* *breaking-timer* *timer*) 0)
         (setf drawp t)
@@ -145,10 +146,10 @@
         ;; either way, we need to reset the timer and pause
         (reset-timer)
         (stop-timer)
-        (when (not (u:audio-is-playing))
+        (when (zerop (sdl2-mixer:playing -1))
           (if *breaking*
-              (u:play-music "assets/bell.ogg")
-              (u:play-music "assets/bell-break.ogg"))))
+              (c:play-music "assets/bell.ogg")
+              (c:play-music "assets/bell-break.ogg"))))
       drawp)))
 
 ;;
@@ -251,7 +252,7 @@
   (record-timer)
   (incf-timer))
 
-(defun draw ()
+(defun draw-forever ()
   "this method is called every `*calm-delay*' milliseconds,
 only when the window is not hidden or minimized."
 
@@ -282,7 +283,7 @@ only when the window is not hidden or minimized."
     (c:move-to 50 180)
     (apply #'c:set-source-rgb *button-color-hover*)
     (c:show-text "    May you be happy.")
-    (return-from draw 42))
+    (return-from draw-forever 42))
 
 
   (apply #'c:set-source-rgb *bg-color*)
@@ -350,4 +351,6 @@ only when the window is not hidden or minimized."
   (if *pause*
       (draw-resume-button)
       (draw-pause-button))
-  (draw-reset-button))
+  (draw-reset-button)
+
+  (setf *calm-redraw* nil))
