@@ -97,7 +97,12 @@
 ;; custom logic functions
 ;;
 
+(defun stop-timer ()
+  (setf *pause* t)
+  (setf *last-second* 0))
+
 (defun reset-timer ()
+  "this resets the timer, not the whole rounds, for that please check `reset-all'"
   (format t "RESETING.... ~%")
   (format t "ROUND: ~A BREAK: ~A~%" *round* *breaking*)
   (if *breaking*
@@ -106,6 +111,14 @@
           (setf *breaking-timer* (* 5 60)))
       (setf *timer* (* 25 60))))
 
+(defun reset-all ()
+  "reset everything"
+  (setf *breaking* nil)
+  (stop-timer)
+  (setf *round* 0)
+  (stop-timer)
+  (reset-timer))
+
 (defun reset-round ()
   (setf *round* 0))
 
@@ -113,18 +126,12 @@
   (when (and (not *pause*) (= *last-second* 0))
     (setf *last-second* (get-universal-time))))
 
-(defun stop-timer ()
-  (setf *pause* t)
-  (setf *last-second* 0))
-
 (defun incf-timer ()
   (when (not *pause*)
     (let* ((curr-second (get-universal-time))
-           (duration (- curr-second *last-second*))
-           (drawp nil))
+           (duration (- curr-second *last-second*)))
       ;; when more than 1 second passed
       (when ( >= duration 1)
-        (setf drawp t)
         (setf *last-second* curr-second)
         (if *breaking*
             (progn (incf *breaking-timer* (* -1 duration)) (when (< *breaking-timer* 0) (setf *breaking-timer* 0)))
@@ -132,7 +139,6 @@
         (setf *calm-redraw* t))
       ;; when time is up
       (when (<= (if *breaking* *breaking-timer* *timer*) 0)
-        (setf drawp t)
         (if *breaking*
             ;; if it's breaking, then finish the break
             ;; and increase the round
@@ -149,8 +155,7 @@
         (when (zerop (sdl2-mixer:playing -1))
           (if *breaking*
               (c:play-music "assets/bell.ogg")
-              (c:play-music "assets/bell-break.ogg"))))
-      drawp)))
+              (c:play-music "assets/bell-break.ogg")))))))
 
 ;;
 ;; custom drawing functions
@@ -215,13 +220,15 @@
 
 (defun on-keyup (key)
   (cond
-    ((eq key :SCANCODE-SPACE)
+    ((c:keq key :SCANCODE-R)
+     (reset-all))
+    ((c:keq key :SCANCODE-SPACE)
      (progn (setf *pause* (not *pause*)) (when *pause* (stop-timer))))
-    ((eq key :SCANCODE-SLASH)
+    ((c:keq key :SCANCODE-SLASH)
      (setf *show-help* t))
-    ((eq key :SCANCODE-ESCAPE)
+    ((c:keq key :SCANCODE-ESCAPE :SCANCODE-Q)
      (setf *show-help* nil))
-    ((eq key :SCANCODE-B)
+    ((c:keq key :SCANCODE-B)
      (browse "https://vitovan.com/focalizzare"))
     (t (format t "~%KEY PRESSED: ~A~%" key))))
 
@@ -234,18 +241,15 @@
    (< y (+ ry rheight))))
 
 (defun on-mousebuttonup (&key button x y clicks)
-  ;; clicking pause or resume button
+  "clicking pause or resume button"
+  (declare (ignore button clicks))
   (when (is-in-rectangle x y 53 135 28 33)
     (setf *pause* (not *pause*))
     (when *pause* (stop-timer)))
 
   ;; clicking reset button
   (when (is-in-rectangle x y 215 135 30 30)
-    (setf *breaking* nil)
-    (stop-timer)
-    (setf *round* 0)
-    (stop-timer)
-    (reset-timer)))
+    (reset-all)))
 
 (defun think ()
   "this method is called every `*calm-delay*' milliseconds, no matter what."
@@ -259,30 +263,32 @@ only when the window is not hidden or minimized."
   (c:select-font-face "Arial" :normal :normal)
 
   (when *show-help*
+    (c:select-font-face "Courier" :normal :normal)
     (c:set-font-size 18)
-    (c:move-to 20 30)
     (apply #'c:set-source-rgb *button-color*)
-    (c:show-text "Press:")
-    (c:move-to 30 60)
-    (c:show-text "<?>")
-    (c:move-to 120 60)
-    (c:show-text "to show this help")
-    (c:move-to 30 90)
-    (c:show-text "<ESC>")
-    (c:move-to 120 90)
-    (c:show-text "to close this help")
-    (c:move-to 30 120)
-    (c:show-text "<SPACE>")
-    (c:move-to 120 120)
-    (c:show-text "to start or pause")
-    (c:move-to 30 150)
-    (c:show-text "<B>")
-    (c:move-to 120 150)
-    (c:show-text "to open the website")
+    (c:move-to 30 40)
+    (c:show-text "?")
+    (c:move-to 120 40)
+    (c:show-text "show help")
+    (c:move-to 30 70)
+    (c:show-text "r")
+    (c:move-to 120 70)
+    (c:show-text "reset")
+    (c:move-to 30 100)
+    (c:show-text "esc")
+    (c:move-to 120 100)
+    (c:show-text "close help")
+    (c:move-to 30 130)
+    (c:show-text "space")
+    (c:move-to 120 130)
+    (c:show-text "start / pause")
+    (c:move-to 30 160)
+    (c:show-text "b")
+    (c:move-to 120 160)
+    (c:show-text "open homepage")
 
     (c:move-to 50 180)
     (apply #'c:set-source-rgb *button-color-hover*)
-    (c:show-text "    May you be happy.")
     (return-from draw-forever 42))
 
 
