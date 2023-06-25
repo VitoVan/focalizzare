@@ -128,6 +128,7 @@
 
 (defun incf-timer ()
   (when (not *pause*)
+    (c:open-audio-if-not-yet)
     (let* ((curr-second (get-universal-time))
            (duration (- curr-second *last-second*)))
       ;; when more than 1 second passed
