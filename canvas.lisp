@@ -61,7 +61,6 @@
 
 (setf *calm-window-width* 300)
 (setf *calm-window-height* 200)
-(setf *calm-window-icon* "assets/icon.png")
 
 (setf *calm-window-title*
       (if (string= (uiop:getenv "BUILD_TRIAL") "yah")
