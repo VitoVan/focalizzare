@@ -61,7 +61,7 @@ jobs:
           export PATH=$PATH:$(pwd)/calm/
           export APP_ICON="$(pwd)/images/icon.icns"
           export DMG_ICON="$(pwd)/images/icon-dmg.icns"
-          export APP_VERSION=0.0.9
+          export APP_VERSION=1.0.0
           export APP_ID=com.vitovan.focalizzare
           export APP_NAME=Focalizzare
           calm publish
