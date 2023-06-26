@@ -34,7 +34,7 @@
 ;; CALM version check
 ;;
 
-(let ((required-version "1.0.0")
+(let ((required-version "1.1.0")
       (calm-version (slot-value (asdf:find-system 'calm) 'asdf:version)))
   (when (uiop:version< calm-version required-version)
     (format t "Sorry, this is built on CALM ~A, older version (current: ~A) of CALM won't work.~%" required-version calm-version)
@@ -62,10 +62,7 @@
 (setf *calm-window-width* 300)
 (setf *calm-window-height* 200)
 
-(setf *calm-window-title*
-      (if (string= (uiop:getenv "BUILD_TRIAL") "yah")
-          "Focalizzare - Free Trial"
-          "Focalizzare"))
+(setf *calm-window-title* "Focalizzare")
 
 ;;
 ;; custom parameters
@@ -214,15 +211,22 @@
   #+win32
   (uiop:run-program (str:concat "start " url)))
 
+(defun window-is-on-top ()
+  (member :always-on-top (sdl2:get-window-flags *calm-window*)))
+
 ;;
 ;; events handling
 ;;
 
 (defun on-keyup (key)
   (cond
+    ((c:keq key :SCANCODE-T)
+     (sdl2-ffi.functions:sdl-set-window-always-on-top
+      *calm-window*
+      (if (window-is-on-top) sdl2-ffi:+false+ sdl2-ffi:+true+)))
     ((c:keq key :SCANCODE-R)
      (reset-all))
-    ((c:keq key :SCANCODE-SPACE)
+    ((c:keq key :SCANCODE-SPACE :SCANCODE-Q)
      (progn (setf *pause* (not *pause*)) (when *pause* (stop-timer))))
     ((c:keq key :SCANCODE-SLASH)
      (setf *show-help* t))
@@ -267,17 +271,17 @@ only when the window is not hidden or minimized."
     (c:set-font-size 18)
     (apply #'c:set-source-rgb *button-color*)
     (c:move-to 30 40)
-    (c:show-text "?")
-    (c:move-to 120 40)
-    (c:show-text "show help")
-    (c:move-to 30 70)
-    (c:show-text "r")
-    (c:move-to 120 70)
-    (c:show-text "reset")
-    (c:move-to 30 100)
     (c:show-text "esc")
-    (c:move-to 120 100)
+    (c:move-to 120 40)
     (c:show-text "close help")
+    (c:move-to 30 70)
+    (c:show-text "t")
+    (c:move-to 120 70)
+    (c:show-text "toggle on top")
+    (c:move-to 30 100)
+    (c:show-text "r")
+    (c:move-to 120 100)
+    (c:show-text "reset")
     (c:move-to 30 130)
     (c:show-text "space")
     (c:move-to 120 130)
