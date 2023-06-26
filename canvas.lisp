@@ -264,7 +264,10 @@
   "this method is called every `*calm-delay*' milliseconds,
 only when the window is not hidden or minimized."
 
+  #-linux
   (c:select-font-face "Arial" :normal :normal)
+  #+linux
+  (c:select-font-face "Liberation Sans" :normal :normal)
 
   (when *show-help*
     (c:select-font-face "Courier" :normal :normal)
