@@ -226,7 +226,7 @@
       (if (window-is-on-top) sdl2-ffi:+false+ sdl2-ffi:+true+)))
     ((c:keq key :SCANCODE-R)
      (reset-all))
-    ((c:keq key :SCANCODE-SPACE :SCANCODE-Q)
+    ((c:keq key :SCANCODE-SPACE)
      (progn (setf *pause* (not *pause*)) (when *pause* (stop-timer))))
     ((c:keq key :SCANCODE-SLASH)
      (setf *show-help* t))
