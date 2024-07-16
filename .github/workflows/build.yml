@@ -20,7 +20,7 @@ jobs:
       - name: Build
         run: |
           set -x
-          curl -L -o calm.tgz https://github.com/VitoVan/calm/releases/download/1.1.0/calm.tgz
+          curl -L -o calm.tgz https://github.com/VitoVan/calm/releases/download/1.2.0/calm.tgz
           mkdir calm
           tar xvf calm.tgz
           ls -lah calm
@@ -41,7 +41,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [macos-11, macos-12, macos-13]
+        os: [macos-12, macos-13]
 
     env:
       CI_MATRIX_OS: ${{ matrix.os }}
@@ -53,7 +53,7 @@ jobs:
         run: |
           set -x
           export OS_SUBFIX=".${CI_MATRIX_OS}"
-          curl -L -o calm.dmg https://github.com/VitoVan/calm/releases/download/1.1.0/calm${OS_SUBFIX}.dmg
+          curl -L -o calm.dmg https://github.com/VitoVan/calm/releases/download/1.2.0/calm${OS_SUBFIX}.dmg
           hdiutil attach calm.dmg
           cp -R "/Volumes/Calm - CALM/Calm.app/Contents/MacOS/" calm
           ls -lah calm
@@ -87,7 +87,7 @@ jobs:
         run: |
           set -x
           pacman -S --noconfirm --needed unzip
-          curl -L -o calm.zip https://github.com/VitoVan/calm/releases/download/1.1.0/calm.zip
+          curl -L -o calm.zip https://github.com/VitoVan/calm/releases/download/1.2.0/calm.zip
           unzip calm.zip
           ls -lah calm
           export PATH=$PATH:$(pwd)/calm/
